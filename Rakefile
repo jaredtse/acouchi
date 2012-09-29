@@ -5,6 +5,8 @@
 #   sh "adb uninstall com.jayway.test"
 #   sh "adb install bin/RobotiumBridge-debug.apk"
 # e
+require "fileutils"
+
 desc "compile RobotiumBridge"
 task :default do
   class_path = [
@@ -13,5 +15,10 @@ task :default do
     "./libs/robotium-solo-3.4.1.jar",
   ].map{|p| File.expand_path(p)}.join(File::PATH_SEPARATOR)
 
-  sh "javac RobotiumBridge.java -classpath #{class_path}"
+  sh "javac *.java -classpath #{class_path}"
+  sh "jar cf RobotiumBridge.jar *.class"
+
+  Dir.glob("./*.class").each do |c|
+    FileUtils.rm(c)
+  end
 end

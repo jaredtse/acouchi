@@ -1,0 +1,30 @@
+import android.app.Service;
+import android.os.IBinder;
+import android.content.Intent;
+
+public class RobotiumBridgeService extends Service {
+    private RobotiumBridge robotiumBridge;
+
+    @Override
+    public void onCreate() {
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+      try
+      {
+      robotiumBridge = new RobotiumBridge();
+      }
+      catch (java.io.IOException exception) {}
+      return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+}
