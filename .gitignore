@@ -1,2 +1,9 @@
+#android
+*.apk
+*.ap_
+*.dex
 *.class
-RobotiumBridge.jar
+bin/
+gen/
+local.properties
+proguard-project.txt

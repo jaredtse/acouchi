@@ -1,3 +1,4 @@
+package com.android.robotiumbridge;
 import android.test.ActivityInstrumentationTestCase2;
 import com.jayway.android.robotium.solo.Solo;
 
@@ -9,7 +10,7 @@ public class RobotiumBridge extends NanoHTTPD
 {
   public RobotiumBridge() throws IOException
   {
-    super(8080, new File("."));
+    super(7102, new File("/"));
   }
 
   public Response serve( String uri, String method, Properties header, Properties params, Properties files )

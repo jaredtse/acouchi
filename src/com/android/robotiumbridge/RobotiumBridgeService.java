@@ -1,3 +1,5 @@
+package com.android.robotiumbridge;
+
 import android.app.Service;
 import android.os.IBinder;
 import android.content.Intent;
