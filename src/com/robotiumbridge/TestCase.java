@@ -3,51 +3,30 @@ package com.robotiumbridge;
 import android.test.ActivityInstrumentationTestCase2;
 import com.jayway.android.robotium.solo.Solo;
 
-@SuppressWarnings("unchecked")
-public class TestCase extends ActivityInstrumentationTestCase2 {
+import android.app.Activity;
+import com.example.android.notepad.NotesList;
 
-  private static final String TARGET_PACKAGE_ID="com.example.android.notepad";
-  private static final String LAUNCHER_ACTIVITY_FULL_CLASSNAME="com.example.android.notepad.NotesList";
-  private static Class launcherActivityClass;
-
-  static {
-    try
-    {
-      launcherActivityClass = Class.forName(LAUNCHER_ACTIVITY_FULL_CLASSNAME);
-    } catch (ClassNotFoundException e){
-      throw new RuntimeException(e);
-    }
-  }
-
-  public TestCase() throws ClassNotFoundException{
-    super(TARGET_PACKAGE_ID,launcherActivityClass);
-  }
+public class TestCase extends
+ActivityInstrumentationTestCase2<NotesList> {
 
   private Solo solo;
 
-  @Override
-    protected void setUp() throws Exception
-    {
-      solo = new Solo(getInstrumentation(),getActivity());
-    }
+  public TestCase() {
+    super(NotesList.class);
+  }
 
-  public void testDisplayBlackBox() {
-    //Enter any integer/decimal value for first editfield, we are writing 10
-    solo.enterText(0, "10");
+  public void setUp() throws Exception {
+    solo = new Solo(getInstrumentation(), getActivity());
+  }
 
-    //Enter any interger/decimal value for first editfield, we are writing 20
-    solo.enterText(1, "20");
+  public void testSomething() throws Exception {
+    solo.sendKey(Solo.MENU);
 
-    //Click on Multiply button
-    solo.clickOnButton("Multiply");
-
-    //Verify that resultant of 10 x 20
-    assertTrue(solo.searchText("200"));
+    solo.clickOnText("More");
   }
 
   @Override
     public void tearDown() throws Exception {
       solo.finishOpenedActivities();
     }
-
 }
