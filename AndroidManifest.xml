@@ -15,7 +15,10 @@
     <service android:name=".RobotiumBridgeService">
     </service>
 
+        <uses-library android:name="android.test.runner" />
     </application>
+
+    <instrumentation android:name="android.test.InstrumentationTestRunner" android:targetPackage="com.example.android.notepad" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

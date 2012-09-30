@@ -1,5 +1,4 @@
 package com.android.robotiumbridge;
-import android.test.ActivityInstrumentationTestCase2;
 import com.jayway.android.robotium.solo.Solo;
 
 import java.util.Properties;
@@ -21,7 +20,19 @@ public class RobotiumBridge extends NanoHTTPD
     }
     else
     {
+      try {
+        doSomething();
+      }
+      catch (java.lang.ClassNotFoundException exception)
+      {
+        return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "error :(");
+      }
       return new NanoHTTPD.Response( HTTP_OK, MIME_HTML, "meh?");
     }
+  }
+  private void doSomething() throws java.lang.ClassNotFoundException
+  {
+    TestCase testCase = new TestCase();
+    testCase.testDisplayBlackBox();
   }
 }
