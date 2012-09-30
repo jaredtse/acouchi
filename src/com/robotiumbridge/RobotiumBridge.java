@@ -5,52 +5,68 @@ import java.util.Properties;
 import java.io.File;
 import java.io.IOException;
 
-//deleteme
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
+import android.app.Instrumentation;
+import android.app.Activity;
 
 public class RobotiumBridge extends NanoHTTPD
 {
-  public RobotiumBridge() throws IOException
+  private Solo solo;
+  private Instrumentation instrumentation;
+  private Activity activity;
+  private boolean serverRunning = true;
+  private Lock lock = new ReentrantLock();
+  private Condition endedCondition = lock.newCondition();
+
+  public RobotiumBridge(Instrumentation instrumentation, Activity activity) throws IOException
   {
     super(7103, new File("."));
+    instrumentation = instrumentation;
+    activity = activity;
   }
 
-  public Response serve( String uri, String method, Properties header, Properties params, Properties files )
+  public void WaitUntilServerKilled() throws InterruptedException
   {
-    if (uri.endsWith("/ping"))
-    {
-      return new NanoHTTPD.Response( HTTP_OK, MIME_HTML, "pong");
+    lock.lock();
+    try {
+      while(serverRunning)
+      {
+        endedCondition.await();
+      }
     }
-    else
-    {
-      try
-      {
-        return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, executeRequest());
-      }
-      catch (java.lang.ClassNotFoundException exception)
-      {
-        return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "error :(");
-      }
+    finally {
+      lock.unlock();
     }
   }
 
-  private String executeRequest() throws java.lang.ClassNotFoundException
+  public Response serve(String uri, String method, Properties header, Properties params, Properties files )
   {
-    return "meh";
-    // try
-    // {
-    //   TestCase testCase = new TestCase();
-    //   testCase.runTests();
-    //   return "that worked";
-    // }
-    // catch (java.lang.Exception exception)
-    // {
-    //   StringWriter sw = new StringWriter();
-    //   PrintWriter pw = new PrintWriter(sw);
-    //   exception.printStackTrace(pw);
-    //   return exception.getMessage() + "\n" + sw.toString();
-    // }
+    if (uri.endsWith("/start"))
+    {
+      solo = new Solo(instrumentation, activity);
+      return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "");
+    }
+    else if (uri.endsWith("/finish"))
+    {
+      try {
+        solo.finishOpenedActivities();
+        serverRunning = false;
+        stop();
+        endedCondition.signal();
+      }
+      finally {
+        lock.unlock();
+      }
+      return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "");
+    }
+    else if (uri.endsWith("/execute_method"))
+    {
+      return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "executing");
+    }
+
+    return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "RobotiumBridge");
   }
 }
