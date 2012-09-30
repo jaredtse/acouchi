@@ -2,7 +2,6 @@ package com.android.robotiumbridge;
 
 import android.test.ActivityInstrumentationTestCase2;
 import com.jayway.android.robotium.solo.Solo;
-import com.example.android.notepad.NotesList;
 
 @SuppressWarnings("unchecked")
 public class TestCase extends ActivityInstrumentationTestCase2 {
@@ -52,43 +51,3 @@ public class TestCase extends ActivityInstrumentationTestCase2 {
     }
 
 }
-// import com.example.android.notepad.NotesList;
-// import com.jayway.android.robotium.solo.Solo;
-// import android.test.ActivityInstrumentationTestCase2;
-
-// public class TestCase extends
-// ActivityInstrumentationTestCase2<NotesList> {
-
-//   private Solo solo;
-
-//   public TestCase() {
-//     super(EditorActivity.class);
-//   }
-
-//   public void setUp() throws Exception {
-//     solo = new Solo(getInstrumentation(), getActivity());
-//   }
-
-//   public void testPreferenceIsSaved() throws Exception {
-
-//     solo.sendKey(Solo.MENU);
-//     solo.clickOnText("More");
-//     solo.clickOnText("Preferences");
-//     solo.clickOnText("Edit File Extensions");
-//     Assert.assertTrue(solo.searchText("rtf"));
-
-//     solo.clickOnText("txt");
-//     solo.clearEditText(2);
-//     solo.enterText(2, "robotium");
-//     solo.clickOnButton("Save");
-//     solo.goBack();
-//     solo.clickOnText("Edit File Extensions");
-//     Assert.assertTrue(solo.searchText("application/robotium"));
-
-//   }
-
-//   @Override
-//     public void tearDown() throws Exception {
-//       solo.finishOpenedActivities();
-//     }
-// }
