@@ -1,4 +1,4 @@
-package com.android.robotiumbridge;
+package com.robotiumbridge;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,7 @@ public class RobotiumBridgeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       Intent intent = new Intent();
-      intent.setClassName("com.android.robotiumbridge", "com.android.robotiumbridge.RobotiumBridgeService");
+      intent.setClassName("com.robotiumbridge", "com.robotiumbridge.RobotiumBridgeService");
       bindService(intent, null, Context.BIND_AUTO_CREATE);
       this.startService(intent);
     }

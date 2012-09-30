@@ -1,4 +1,4 @@
-package com.android.robotiumbridge;
+package com.robotiumbridge;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

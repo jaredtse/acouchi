@@ -1,4 +1,4 @@
-package com.android.robotiumbridge;
+package com.robotiumbridge;
 import com.jayway.android.robotium.solo.Solo;
 
 import java.util.Properties;

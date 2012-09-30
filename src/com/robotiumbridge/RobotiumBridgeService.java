@@ -1,4 +1,4 @@
-package com.android.robotiumbridge;
+package com.robotiumbridge;
 
 import android.app.Service;
 import android.os.IBinder;
