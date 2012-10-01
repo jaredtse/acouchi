@@ -6,15 +6,26 @@ import com.jayway.android.robotium.solo.Solo;
 import android.app.Activity;
 import com.example.android.notepad.NotesList;
 
-public class TestCase extends ActivityInstrumentationTestCase2<NotesList> {
+import com.jayway.android.robotium.solo.Solo;
+public class TestCase extends ActivityInstrumentationTestCase2 {
+  private Solo solo;
+  private RobotiumBridge robotiumBridge;
+
   public TestCase()
   {
-    super(NotesList.class);
+    super("com.example.android.notepad", NotesList.class);
   }
+
+  @Override
+    protected void setUp() throws Exception {
+      super.setUp();
+      solo = new Solo(getInstrumentation(), this.getActivity());
+    }
 
   public void testSomething() throws Exception
   {
-    RobotiumBridge robotiumBridge = new RobotiumBridge(getInstrumentation(), getActivity());
+    robotiumBridge = new RobotiumBridge(solo);
     robotiumBridge.WaitUntilServerKilled();
+    solo.finishOpenedActivities();
   }
 }
