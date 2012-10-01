@@ -13,7 +13,7 @@ public class TestCase extends ActivityInstrumentationTestCase2 {
 
   public TestCase()
   {
-    super(ACTIVITY_UNDER_TEST.class);
+    super(com.robotiumbridge.sample.StartupActivity.class);
     // super("com.example.android.notepad", NotesList.class);
   }
 
