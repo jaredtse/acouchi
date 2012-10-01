@@ -1,4 +1,4 @@
-APK_TOOL = File.expand_path(File.join(File.dirname(__FILE__), "apktool"))
+APK_TOOL = "apktool"
 ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../src/com/robotiumbridge"))
 
 require "fileutils"
@@ -12,7 +12,9 @@ class Builder
   end
 
   def self.kill_test_runner
-    Thread.kill(@test_runner_thread)
+    if @test_runner_thread
+      Thread.kill(@test_runner_thread)
+    end
   end
 
   def self.build configuration
@@ -28,6 +30,7 @@ class Builder
 
   def self.copy_over_robotium_jar project_path
     robotium_jar = File.expand_path(Dir.glob(File.join(File.dirname(__FILE__), "../jars/*robotium*.jar")).first)
+    FileUtils.mkdir_p "#{project_path}/libs"
     FileUtils.cp robotium_jar, "#{project_path}/libs/"
   end
 
