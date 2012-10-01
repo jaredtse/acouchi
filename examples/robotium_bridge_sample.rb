@@ -1,5 +1,5 @@
-require_relative "../lib/solo"
-require_relative "../lib/build"
+require "robotium-bridge/build"
+require "robotium-bridge/solo"
 
 def setup
   configuration = {
@@ -8,26 +8,26 @@ def setup
     :project_path   => File.expand_path(File.join(File.dirname(__FILE__), "RobotiumBridgeSample")),
     :apk            => "RobotiumBridgeSample-debug.apk",
   }
-  Builder.build(configuration)
-  Builder.launch_test_runner(configuration)
-  Solo.wait_until_ready
+  RobotiumBridge::Builder.build(configuration)
+  RobotiumBridge::Builder.launch_test_runner(configuration)
+  RobotiumBridge::Solo.wait_until_ready
 
   at_exit do
-    Solo.kill_server
-    Builder.kill_test_runner
+    RobotiumBridge::Solo.kill_server
+    RobotiumBridge::Builder.kill_test_runner
   end
 end
 
 def test_add_new_note
-  Solo.enter_text(0, "hello")
+  RobotiumBridge::Solo.enter_text(0, "hello")
   sleep 1
 end
 
 def test_delete_note
-  Solo.clear_edit_text(0)
-  Solo.enter_text(0, "spelling eror")
+  RobotiumBridge::Solo.clear_edit_text(0)
+  RobotiumBridge::Solo.enter_text(0, "spelling eror")
   sleep 1
-  Solo.clear_edit_text(0)
+  RobotiumBridge::Solo.clear_edit_text(0)
 end
 
 setup
