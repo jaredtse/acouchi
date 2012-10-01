@@ -9,7 +9,7 @@ class Solo
 
   class << self
     METHODS.each do |method|
-      ruby_method_name = method[:name].gsub(/([A-Z])/) { "_" + $1.downcase }
+      ruby_method_name = method[:name].gsub(/([A-Z])/) { |capture| "_" + capture.downcase }
       define_method(ruby_method_name) do |*arguments|
         parameters = method[:argument_types].map do |argument_type|
           {"type" => argument_type, "value" => arguments.shift}
