@@ -11,6 +11,11 @@ def setup
   Builder.build(configuration)
   Builder.launch_test_runner(configuration)
   Solo.wait_until_ready
+
+  at_exit do
+    Solo.kill_server
+    Builder.kill_test_runner
+  end
 end
 
 def test_add_new_note
@@ -23,11 +28,6 @@ def test_delete_note
   Solo.enter_text(0, "spelling eror")
   sleep 1
   Solo.clear_edit_text(0)
-end
-
-at_exit do
-  Solo.kill_server
-  Builder.kill_test_runner
 end
 
 setup
