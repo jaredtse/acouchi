@@ -1,3 +1,5 @@
+require "childprocess"
+
 module RobotiumBridge
   class TestRunner
     def initialize configuration
@@ -5,18 +7,22 @@ module RobotiumBridge
     end
 
     def start
-      @test_runner_thread = Thread.new {
-        system "adb forward tcp:7103 tcp:7103"
-        system "adb shell am instrument -w #{@configuration.target_package}/android.test.InstrumentationTestRunner"
-      }
+      system "adb forward tcp:7103 tcp:7103"
+      @test_runner_process = ChildProcess.build("adb", "shell", "am", "instrument", "-w", "#{@configuration.target_package}/android.test.InstrumentationTestRunner")
+      @test_runner_process.start
+
       while ready? == false
         sleep 0.1
       end
     end
 
     def stop
-      Thread.kill(@test_runner_thread) if @test_runner_thread
       HTTParty.get("http://127.0.0.1:7103/finish") rescue nil
+      begin
+        @test_runner_process.poll_for_exit 10
+      rescue ChildProcess::TimeoutError
+        @test_runner_process.stop
+      end
     end
 
     private
