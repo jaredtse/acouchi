@@ -4,7 +4,7 @@ require "fileutils"
 module RobotiumBridge
   ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
 
-  class Builder
+  class ProjectBuilder
     def self.build configuration
       copy_over_robotium_jar configuration[:project_path]
       copy_over_source_files configuration[:target_package], configuration[:project_path], configuration[:activity]

@@ -1,4 +1,4 @@
-require "robotium-bridge/build"
+require "robotium-bridge/project_builder"
 require "robotium-bridge/solo"
 require "robotium-bridge/test_runner"
 
@@ -9,7 +9,7 @@ def setup
     :project_path   => File.expand_path(File.join(File.dirname(__FILE__), "RobotiumBridgeSample")),
     :apk            => "RobotiumBridgeSample-debug.apk",
   }
-  RobotiumBridge::Builder.build(configuration)
+  RobotiumBridge::ProjectBuilder.build(configuration)
   @test_runner = RobotiumBridge::TestRunner.new(configuration[:target_package])
   @test_runner.start
 
