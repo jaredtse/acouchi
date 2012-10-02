@@ -1,6 +1,7 @@
+require "robotium-bridge/apk_modifier"
+require "fileutils"
+
 module RobotiumBridge
-  require "fileutils"
-  APK_TOOL = "apktool"
   ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
 
   class Builder
@@ -48,17 +49,27 @@ module RobotiumBridge
     end
 
     def self.modify_manifest package, apk, apk_path
-      temp_apk_path = File.expand_path(File.join(File.dirname(__FILE__), "temp_apk_path"))
-      manifest_path = File.join(temp_apk_path, "AndroidManifest.xml")
-      new_apk_path = File.join(temp_apk_path, "dist", apk)
+      ApkModifier.new(apk_path).modify_manifest do |original|
+        require "nokogiri"
+        document = Nokogiri::XML(original)
+        manifest = document.xpath("//manifest").first
 
-      Builder.decompile_apk(apk_path, temp_apk_path)
-      Builder.apply_required_manifest_changes(manifest_path, package)
-      Builder.recompile_apk(temp_apk_path)
-      Builder.sign_apk_in_debug_mode(new_apk_path)
+        instrumentation = Nokogiri::XML::Node.new("instrumentation", document)
+        instrumentation["android:name"] = "android.test.InstrumentationTestRunner"
+        instrumentation["android:targetPackage"] = package
+        manifest.add_child(instrumentation)
 
-      FileUtils.mv File.join(temp_apk_path, "dist", apk), apk_path
-      FileUtils.rm_rf temp_apk_path
+        uses_permission = Nokogiri::XML::Node.new("uses-permission", document)
+        uses_permission["android:name"] = "android.permission.INTERNET"
+        manifest.add_child(uses_permission)
+
+        application = document.xpath("//application").first
+        uses_library = Nokogiri::XML::Node.new("uses-library", document)
+        uses_library["android:name"] = "android.test.runner"
+        application.add_child(uses_library)
+
+        document.to_xml
+      end
     end
 
     def self.build_apk project_path
@@ -67,40 +78,6 @@ module RobotiumBridge
         system "ant clean"
         system "ant debug"
       end
-    end
-
-    def self.decompile_apk(apk_path, output_path)
-      system "#{APK_TOOL} d #{apk_path} #{output_path}"
-    end
-
-    def self.apply_required_manifest_changes(manifest_path, target_package)
-      require "nokogiri"
-      document = Nokogiri::XML(File.read(manifest_path))
-      manifest = document.xpath("//manifest").first
-
-      instrumentation = Nokogiri::XML::Node.new("instrumentation", document)
-      instrumentation["android:name"] = "android.test.InstrumentationTestRunner"
-      instrumentation["android:targetPackage"] = target_package
-      manifest.add_child(instrumentation)
-
-      uses_permission = Nokogiri::XML::Node.new("uses-permission", document)
-      uses_permission["android:name"] = "android.permission.INTERNET"
-      manifest.add_child(uses_permission)
-
-      application = document.xpath("//application").first
-      uses_library = Nokogiri::XML::Node.new("uses-library", document)
-      uses_library["android:name"] = "android.test.runner"
-      application.add_child(uses_library)
-
-      File.open(manifest_path, "w") {|f| f.write(document.to_xml)}
-    end
-
-    def self.recompile_apk directory
-      system "#{APK_TOOL} b #{directory}"
-    end
-
-    def self.sign_apk_in_debug_mode path
-      system "jarsigner -keystore ~/.android/debug.keystore -storepass android -keypass android #{path} androiddebugkey"
     end
 
     def self.install_apk target_package, apk_path
