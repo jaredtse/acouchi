@@ -22,20 +22,6 @@ module RobotiumBridge
           puts HTTParty.post("http://127.0.0.1:7103/execute_method/#{method[:name]}", options).body
         end
       end
-
-      def wait_until_ready
-        while ready? == false
-          sleep 0.1
-        end
-      end
-
-      def ready?
-        HTTParty.get("http://127.0.0.1:7103/").body == "RobotiumBridge" rescue false
-      end
-
-      def kill_server
-        HTTParty.get("http://127.0.0.1:7103/finish") rescue false
-      end
     end
   end
 end

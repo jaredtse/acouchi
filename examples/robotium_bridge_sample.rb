@@ -1,5 +1,6 @@
 require "robotium-bridge/build"
 require "robotium-bridge/solo"
+require "robotium-bridge/test_runner"
 
 def setup
   configuration = {
@@ -9,12 +10,11 @@ def setup
     :apk            => "RobotiumBridgeSample-debug.apk",
   }
   RobotiumBridge::Builder.build(configuration)
-  RobotiumBridge::Builder.launch_test_runner(configuration)
-  RobotiumBridge::Solo.wait_until_ready
+  @test_runner = RobotiumBridge::TestRunner.new(configuration[:target_package])
+  @test_runner.start
 
   at_exit do
-    RobotiumBridge::Solo.kill_server
-    RobotiumBridge::Builder.kill_test_runner
+    @test_runner.stop
   end
 end
 

@@ -5,19 +5,6 @@ module RobotiumBridge
   ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
 
   class Builder
-    def self.launch_test_runner(configuration)
-      @test_runner_thread = Thread.new {
-        system "adb forward tcp:7103 tcp:7103"
-        system "adb shell am instrument -w #{configuration[:target_package]}/android.test.InstrumentationTestRunner"
-      }
-    end
-
-    def self.kill_test_runner
-      if @test_runner_thread
-        Thread.kill(@test_runner_thread)
-      end
-    end
-
     def self.build configuration
       copy_over_robotium_jar configuration[:project_path]
       copy_over_source_files configuration[:target_package], configuration[:project_path], configuration[:activity]
