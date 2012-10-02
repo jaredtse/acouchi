@@ -20,9 +20,10 @@ module RobotiumBridge
       call_method("clearEditText", [{:type => "int", :value => index}])
     end
 
-    def call_method name, arguments
-      options = { :body => {:parameters => arguments.to_json} }
-      puts HTTParty.post("http://127.0.0.1:7103/execute_method/#{name}", options).body
-    end
+    private
+      def call_method name, arguments
+        options = { :body => {:parameters => arguments.to_json} }
+        puts HTTParty.post("http://127.0.0.1:7103/execute_method/#{name}", options).body
+      end
   end
 end
