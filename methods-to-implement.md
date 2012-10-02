@@ -1,3 +1,22 @@
+Constants
+---------
+
+com.jayway.android.robotium.solo.Solo
+public static final int	CLOSED	0
+public static final int	DELETE	67
+public static final int	DOWN	20
+public static final int	ENTER	66
+public static final int	LANDSCAPE	0
+public static final int	LEFT	21
+public static final int	MENU	82
+public static final int	OPENED	1
+public static final int	PORTRAIT	1
+public static final int	RIGHT	22
+public static final int	UP	19
+
+Methods
+-------
+
  void	assertCurrentActivity(String message, Class expectedClass) Asserts that the expected Activity is the currently active one.
  void	assertCurrentActivity(String message, Class expectedClass, boolean isNewInstance) Asserts that the expected Activity is the currently active one, with the possibility to verify that the expected Activity is a new instance of the Activity.
  void	assertCurrentActivity(String message, String name) Asserts that the expected Activity is the currently active one.
