@@ -14,6 +14,7 @@ import android.app.Activity;
 import java.lang.reflect.Method;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONException;
 import java.util.ArrayList;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -84,12 +85,27 @@ public class RobotiumBridge extends NanoHTTPD
       }
 
       Method method = solo.getClass().getMethod(methodName, parameterTypes);
-      method.invoke(solo, parameters);
+      return displayMethodResultAsJson(method.invoke(solo, parameters));
     } catch (Exception exception) {
       return showException(exception);
     }
+  }
 
-    return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "executed");
+  private NanoHTTPD.Response displayMethodResultAsJson(Object result)
+  {
+    try {
+      JSONObject object = new JSONObject();
+
+      if (result == null) {
+        object.put("emptyResult", true);
+      } else {
+        object.put("result", result);
+      }
+
+      return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, object.toString());
+    } catch (JSONException e) {
+      return showException(e);
+    }
   }
 
   private Class getClassType(String name) throws java.lang.ClassNotFoundException
