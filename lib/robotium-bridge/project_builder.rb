@@ -2,36 +2,46 @@ require "robotium-bridge/apk_modifier"
 require "fileutils"
 
 module RobotiumBridge
+  JARS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../jars"))
   ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
 
   class ProjectBuilder
     def self.build configuration
-      copy_over_robotium_jar configuration[:project_path]
-      copy_over_source_files configuration[:target_package], configuration[:project_path], configuration[:activity]
-
-      build_apk(configuration[:project_path])
+      temporarily_copy_over_source_files configuration[:target_package], configuration[:project_path], configuration[:activity] do
+        build_apk(configuration[:project_path])
+      end
 
       apk_path = File.join(configuration[:project_path], "bin", configuration[:apk])
       modify_manifest(configuration[:target_package], configuration[:apk], apk_path)
       install_apk(configuration[:target_package], apk_path)
     end
 
-    def self.copy_over_robotium_jar project_path
-      robotium_jar = File.expand_path(Dir.glob(File.join(File.dirname(__FILE__), "../../jars/*robotium*.jar")).first)
-      FileUtils.mkdir_p "#{project_path}/libs"
-      FileUtils.cp robotium_jar, "#{project_path}/libs/"
-    end
 
-    def self.copy_over_source_files target_package, project_path, activity
+    def self.temporarily_copy_over_source_files target_package, project_path, activity
+      destination_libs_path = "#{project_path}/libs"
       destination_source_path = "#{project_path}/src/com/robotiumbridge"
-      FileUtils.cp "#{ROBOTIUM_SOURCE_PATH}/TestCase.java", destination_source_path
-      FileUtils.cp "#{ROBOTIUM_SOURCE_PATH}/RobotiumBridge.java", destination_source_path
-      FileUtils.cp "#{ROBOTIUM_SOURCE_PATH}/NanoHTTPD.java", destination_source_path
 
-      test_case_rb_path = "#{destination_source_path}/TestCase.java"
-      test_case_rb = File.read(test_case_rb_path).gsub("ACTIVITY_UNDER_TEST", activity)
-      File.open(test_case_rb_path, "w") do |file|
-        file.write(test_case_rb)
+      FileUtils.mkdir_p destination_libs_path
+      Dir.glob(File.join(JARS_PATH, "*.jar")).each do |jar|
+        FileUtils.cp jar, destination_libs_path
+      end
+
+      FileUtils.mkdir_p destination_source_path
+      Dir.glob(File.join(ROBOTIUM_SOURCE_PATH, "*.java")).each do |java_file|
+        FileUtils.cp java_file, destination_source_path
+        file_path = File.join(destination_source_path, File.basename(java_file))
+        file_content = File.read(file_path).gsub("ACTIVITY_UNDER_TEST", activity)
+        File.open(file_path, "w") { |file| file.write(file_content) }
+      end
+
+      yield
+
+      Dir.glob(File.join(JARS_PATH, "*.jar")).each do |jar|
+        FileUtils.rm File.join(destination_libs_path, File.basename(jar))
+      end
+
+      Dir.glob(File.join(ROBOTIUM_SOURCE_PATH, "*.java")).each do |java_file|
+        FileUtils.rm File.join(destination_source_path, File.basename(java_file))
       end
     end
 
