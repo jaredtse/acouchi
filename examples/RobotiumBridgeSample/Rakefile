@@ -1,0 +1,13 @@
+require "cucumber"
+require "cucumber/rake/task"
+require "robotium-bridge"
+
+desc "build project with RobotiumBridge code included"
+task :build do
+  configuration = RobotiumBridge::Configuration.from_json(File.read("robotium_bridge_configuration.json"))
+  RobotiumBridge::ProjectBuilder.new(configuration).build
+end
+
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty"
+end
