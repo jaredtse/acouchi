@@ -15,15 +15,14 @@ module RobotiumBridge
     end
 
     def build
-      temporarily_copy_over_source_files
-        build_apk(configuration.project_path)
+      temporarily_copy_over_source_files do
+        build_apk
       end
 
       apk_path = File.join(configuration.project_path, "bin", configuration.apk)
       modify_manifest(apk_path)
       install_apk(apk_path)
     end
-
 
     def temporarily_copy_over_source_files
       destination_libs_path = "#{configuration.project_path}/libs"
@@ -77,9 +76,8 @@ module RobotiumBridge
       end
     end
 
-    def build_apk project_path
-      Dir.chdir project_path do
-        puts project_path
+    def build_apk
+      Dir.chdir configuration.project_path do
         system "ant clean"
         system "ant debug"
       end
