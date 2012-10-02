@@ -1,13 +1,13 @@
 module RobotiumBridge
   class TestRunner
-    def initialize package
-      @package = package
+    def initialize configuration
+      @configuration = configuration
     end
 
     def start
       @test_runner_thread = Thread.new {
         system "adb forward tcp:7103 tcp:7103"
-        system "adb shell am instrument -w #{@package}/android.test.InstrumentationTestRunner"
+        system "adb shell am instrument -w #{@configuration.target_package}/android.test.InstrumentationTestRunner"
       }
       while ready? == false
         sleep 0.1

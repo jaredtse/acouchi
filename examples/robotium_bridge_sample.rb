@@ -7,8 +7,16 @@ def setup
     :project_path   => File.expand_path(File.join(File.dirname(__FILE__), "RobotiumBridgeSample")),
     :apk            => "RobotiumBridgeSample-debug.apk",
   }
-  RobotiumBridge::ProjectBuilder.build(configuration)
-  @test_runner = RobotiumBridge::TestRunner.new(configuration[:target_package])
+  configuration = RobotiumBridgeSample::Configuration.new
+  configuration.target_package = "com.robotiumbridge.sample"
+  configuration.activity       = "com.robotiumbridge.sample.StartupActivity"
+  configuration.project_path   = File.expand_path(File.join(File.dirname(__FILE__), "RobotiumBridgeSample"))
+  configuration.apk            = "RobotiumBridgeSample-debug.apk"
+
+  project_builder = ProjectBuilder.new(configuration)
+  project_builder.build
+
+  @test_runner = RobotiumBridge::TestRunner.new(configuration)
   @test_runner.start
   @solo = RobotiumBridge::Solo.new
 

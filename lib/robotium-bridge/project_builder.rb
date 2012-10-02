@@ -6,20 +6,28 @@ module RobotiumBridge
   ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
 
   class ProjectBuilder
-    def self.build configuration
-      temporarily_copy_over_source_files configuration[:target_package], configuration[:project_path], configuration[:activity] do
-        build_apk(configuration[:project_path])
+    def initialize configuration
+      @configuration = configuration
+    end
+
+    def configuration
+      @configuration
+    end
+
+    def build
+      temporarily_copy_over_source_files
+        build_apk(configuration.project_path)
       end
 
-      apk_path = File.join(configuration[:project_path], "bin", configuration[:apk])
-      modify_manifest(configuration[:target_package], configuration[:apk], apk_path)
-      install_apk(configuration[:target_package], apk_path)
+      apk_path = File.join(configuration.project_path, "bin", configuration.apk)
+      modify_manifest(apk_path)
+      install_apk(apk_path)
     end
 
 
-    def self.temporarily_copy_over_source_files target_package, project_path, activity
-      destination_libs_path = "#{project_path}/libs"
-      destination_source_path = "#{project_path}/src/com/robotiumbridge"
+    def temporarily_copy_over_source_files
+      destination_libs_path = "#{configuration.project_path}/libs"
+      destination_source_path = "#{configuration.project_path}/src/com/robotiumbridge"
 
       FileUtils.mkdir_p destination_libs_path
       Dir.glob(File.join(JARS_PATH, "*.jar")).each do |jar|
@@ -30,7 +38,7 @@ module RobotiumBridge
       Dir.glob(File.join(ROBOTIUM_SOURCE_PATH, "*.java")).each do |java_file|
         FileUtils.cp java_file, destination_source_path
         file_path = File.join(destination_source_path, File.basename(java_file))
-        file_content = File.read(file_path).gsub("ACTIVITY_UNDER_TEST", activity)
+        file_content = File.read(file_path).gsub("ACTIVITY_UNDER_TEST", configuration.activity)
         File.open(file_path, "w") { |file| file.write(file_content) }
       end
 
@@ -45,7 +53,7 @@ module RobotiumBridge
       end
     end
 
-    def self.modify_manifest package, apk, apk_path
+    def modify_manifest apk_path
       ApkModifier.new(apk_path).modify_manifest do |original|
         require "nokogiri"
         document = Nokogiri::XML(original)
@@ -53,7 +61,7 @@ module RobotiumBridge
 
         instrumentation = Nokogiri::XML::Node.new("instrumentation", document)
         instrumentation["android:name"] = "android.test.InstrumentationTestRunner"
-        instrumentation["android:targetPackage"] = package
+        instrumentation["android:targetPackage"] = configuration.target_package
         manifest.add_child(instrumentation)
 
         uses_permission = Nokogiri::XML::Node.new("uses-permission", document)
@@ -69,7 +77,7 @@ module RobotiumBridge
       end
     end
 
-    def self.build_apk project_path
+    def build_apk project_path
       Dir.chdir project_path do
         puts project_path
         system "ant clean"
@@ -77,8 +85,8 @@ module RobotiumBridge
       end
     end
 
-    def self.install_apk target_package, apk_path
-      system "adb uninstall #{target_package}"
+    def install_apk apk_path
+      system "adb uninstall #{configuration.target_package}"
       system "adb install #{apk_path}"
     end
   end
