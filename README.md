@@ -1,6 +1,13 @@
 Acouchi
 =======
 
+WARNING
+-------
+
+This gem was initially a spike, and has since then become rather useful. It is very much not unit tested. For this I apologise, and offer up this picture of an [Acouchi](http://en.wikipedia.org/wiki/Acouchi):
+
+[[acouchi.jpg]]
+
 Requirements
 ------------
 
