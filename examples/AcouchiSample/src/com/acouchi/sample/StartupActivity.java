@@ -1,4 +1,4 @@
-package com.robotiumbridge.sample;
+package com.acouchi.sample;
 
 import android.app.Activity;
 import android.os.Bundle;

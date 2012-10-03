@@ -1,0 +1,6 @@
+{
+  "target_package": "com.acouchi.sample",
+  "activity"      : "com.acouchi.sample.StartupActivity",
+  "project_path"  : ".",
+  "apk"           : "AcouchiSample-debug.apk"
+}

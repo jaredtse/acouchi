@@ -1,6 +1,6 @@
 require "childprocess"
 
-module RobotiumBridge
+module Acouchi
   class TestRunner
     def initialize configuration
       @configuration = configuration
@@ -27,7 +27,7 @@ module RobotiumBridge
 
     private
       def ready?
-        HTTParty.get("http://127.0.0.1:7103/").body == "RobotiumBridge" rescue false
+        HTTParty.get("http://127.0.0.1:7103/").body == "Acouchi" rescue false
       end
   end
 end

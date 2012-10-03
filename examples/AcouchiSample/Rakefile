@@ -1,0 +1,13 @@
+require "cucumber"
+require "cucumber/rake/task"
+require "acouchi"
+
+desc "build project with Acouchi code included"
+task :build do
+  configuration = Acouchi::Configuration.from_json(File.read("acouchi_configuration.json"))
+  Acouchi::ProjectBuilder.new(configuration).build
+end
+
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty"
+end

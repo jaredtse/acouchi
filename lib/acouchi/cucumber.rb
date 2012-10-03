@@ -1,13 +1,13 @@
-module RobotiumBridge
+module Acouchi
   module Cucumber
     def self.page
       @page
     end
 
     def self.prepare configuration
-      @test_runner = RobotiumBridge::TestRunner.new(configuration)
+      @test_runner = TestRunner.new(configuration)
       @test_runner.start
-      @page = RobotiumBridge::Solo.new
+      @page = Solo.new
       at_exit do
         @test_runner.stop
       end

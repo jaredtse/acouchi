@@ -1,4 +1,4 @@
-package com.robotiumbridge;
+package com.acouchi;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

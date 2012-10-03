@@ -1,6 +1,0 @@
-{
-  "target_package": "com.robotiumbridge.sample",
-  "activity"      : "com.robotiumbridge.sample.StartupActivity",
-  "project_path"  : ".",
-  "apk"           : "RobotiumBridgeSample-debug.apk"
-}

@@ -1,7 +1,7 @@
 require "httparty"
 require "json"
 
-module RobotiumBridge
+module Acouchi
   class Solo
     MENU = 82
 

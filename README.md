@@ -1,5 +1,5 @@
-RobotiumBridge
-==============
+Acouchi
+=======
 
 Requirements
 ------------
@@ -11,35 +11,35 @@ Cucumber
 
 ### PROJECT_ROOT/features/support/env.rb
 
-    require "robotium-bridge"
-    require "robotium-bridge/cucumber"
+    require "acouchi"
+    require "acouchi/cucumber"
 
-    configuration = RobotiumBridge::Configuration.from_json(File.read("robotium_bridge_configuration.json"))
-    RobotiumBridge::Cucumber.prepare(configuration)
+    configuration = Acouchi::Configuration.from_json(File.read("acouchi_configuration.json"))
+    Acouchi::Cucumber.prepare(configuration)
 
     def page
-      RobotiumBridge::Cucumber.page
+      Acouchi::Cucumber.page
     end
 
-### PROJECT_ROOT/robotium_bridge_configuration.json
+### PROJECT_ROOT/acouchi_configuration.json
 
     {
-      "target_package": "com.robotiumbridge.sample",
-      "activity"      : "com.robotiumbridge.sample.StartupActivity",
+      "target_package": "com.acouchi.sample",
+      "activity"      : "com.acouchi.sample.StartupActivity",
       "project_path"  : ".",
-      "apk"           : "RobotiumBridgeSample-debug.apk"
+      "apk"           : "AcouchiSample-debug.apk"
     }
 
 ### PROJECT_ROOT/Rakefile
 
     require "cucumber"
     require "cucumber/rake/task"
-    require "robotium-bridge"
+    require "acouchi"
 
-    desc "build project with RobotiumBridge code included"
+    desc "build project with Acouchi code included"
     task :build do
-      configuration = RobotiumBridge::Configuration.from_json(File.read("robotium_bridge_configuration.json"))
-      RobotiumBridge::ProjectBuilder.new(configuration).build
+      configuration = Acouchi::Configuration.from_json(File.read("acouchi_configuration.json"))
+      Acouchi::ProjectBuilder.new(configuration).build
     end
 
     Cucumber::Rake::Task.new(:features) do |t|

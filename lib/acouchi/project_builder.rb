@@ -1,9 +1,9 @@
-require "robotium-bridge/apk_modifier"
+require "acouchi/apk_modifier"
 require "fileutils"
 
-module RobotiumBridge
+module Acouchi
   JARS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../jars"))
-  ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/robotiumbridge"))
+  ROBOTIUM_SOURCE_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../src/com/acouchi"))
 
   class ProjectBuilder
     def initialize configuration
@@ -26,7 +26,7 @@ module RobotiumBridge
 
     def temporarily_copy_over_source_files
       destination_libs_path = "#{configuration.project_path}/libs"
-      destination_source_path = "#{configuration.project_path}/src/com/robotiumbridge"
+      destination_source_path = "#{configuration.project_path}/src/com/acouchi"
 
       FileUtils.mkdir_p destination_libs_path
       Dir.glob(File.join(JARS_PATH, "*.jar")).each do |jar|

@@ -1,7 +1,7 @@
 require "tmpdir"
 require "securerandom"
 
-module RobotiumBridge
+module Acouchi
   class ApkModifier
     def initialize apk
       @apk = apk

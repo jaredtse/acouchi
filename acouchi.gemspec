@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'robotium-bridge/version'
+require 'acouchi/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "robotium-bridge"
-  gem.version       = Robotium::Bridge::VERSION
+  gem.name          = "acouchi"
+  gem.version       = Acouchi::VERSION
   gem.authors       = ["Andrew Vos"]
   gem.email         = ["andrew.vos@gmail.com"]
   gem.description   = %q{}

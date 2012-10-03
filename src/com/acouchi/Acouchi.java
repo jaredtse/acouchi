@@ -1,4 +1,4 @@
-package com.robotiumbridge;
+package com.acouchi;
 import com.jayway.android.robotium.solo.Solo;
 
 import java.util.Properties;
@@ -20,14 +20,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public class RobotiumBridge extends NanoHTTPD
+public class Acouchi extends NanoHTTPD
 {
   private Solo solo;
   private boolean serverRunning = true;
   private Lock lock = new ReentrantLock();
   private Condition endedCondition = lock.newCondition();
 
-  public RobotiumBridge(Solo solo) throws IOException
+  public Acouchi(Solo solo) throws IOException
   {
     super(7103, new File("."));
     this.solo = solo;
@@ -67,7 +67,7 @@ public class RobotiumBridge extends NanoHTTPD
       return ExecuteMethod(methodName, params.getProperty("parameters"));
     }
 
-    return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "RobotiumBridge");
+    return new NanoHTTPD.Response(HTTP_OK, MIME_HTML, "Acouchi");
   }
 
   private NanoHTTPD.Response ExecuteMethod(String methodName, String json)

@@ -1,4 +1,4 @@
-package com.robotiumbridge;
+package com.acouchi;
 
 import android.test.ActivityInstrumentationTestCase2;
 import com.jayway.android.robotium.solo.Solo;
@@ -9,7 +9,7 @@ import android.app.Activity;
 import com.jayway.android.robotium.solo.Solo;
 public class TestCase extends ActivityInstrumentationTestCase2 {
   private Solo solo;
-  private RobotiumBridge robotiumBridge;
+  private Acouchi acouchi;
 
   public TestCase()
   {
@@ -25,8 +25,8 @@ public class TestCase extends ActivityInstrumentationTestCase2 {
 
   public void testSomething() throws Exception
   {
-    robotiumBridge = new RobotiumBridge(solo);
-    robotiumBridge.WaitUntilServerKilled();
+    acouchi = new Acouchi(solo);
+    acouchi.WaitUntilServerKilled();
     solo.finishOpenedActivities();
   }
 }
