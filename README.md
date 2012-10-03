@@ -4,7 +4,8 @@ Acouchi
 Requirements
 ------------
 
-* [apktool](http://code.google.com/p/android-apktool/) installed and in your path
+* [Android SDK](http://developer.android.com/sdk/installing/index.html) (Make sure to add SDK/tools and SDK/platform-tools to your PATH)
+* [apktool](http://code.google.com/p/android-apktool/)
 
 Cucumber
 --------
