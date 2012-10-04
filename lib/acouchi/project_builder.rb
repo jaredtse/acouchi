@@ -1,5 +1,5 @@
-require "acouchi/apk_modifier"
 require "fileutils"
+require "childprocess"
 
 module Acouchi
   JARS_PATH = File.expand_path(File.join(File.dirname(__FILE__), "../../jars"))
@@ -78,14 +78,13 @@ module Acouchi
 
     def build_apk
       Dir.chdir configuration.project_path do
-        system "ant clean"
-        system "ant debug"
+        ProcessLauncher.new("ant", "clean", "debug").start_and_crash_if_process_fails
       end
     end
 
     def install_apk apk_path
-      system "adb uninstall #{configuration.target_package}"
-      system "adb install #{apk_path}"
+      ProcessLauncher.new("adb", "uninstall", configuration.target_package).start
+      ProcessLauncher.new("adb", "install", apk_path).start_and_crash_if_process_fails
     end
   end
 end
